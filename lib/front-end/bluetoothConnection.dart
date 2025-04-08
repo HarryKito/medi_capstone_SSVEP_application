@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medi_capstone1/HAL/interface.dart'; // デバイス関連
-import 'package:medi_capstone1/front-end/enter.dart';
+import 'package:medi_capstone1/front-end/MainScreen.dart';
 
 class BluetoothConnectionScreen extends StatefulWidget {
   @override
@@ -56,6 +56,7 @@ class _BluetoothConnectionScreenState extends State<BluetoothConnectionScreen> {
     );
   }
 
+  // 연결 안될 시 에러메시지
   String _getErrorMessage(int status) {
     switch (status) {
       case -1:

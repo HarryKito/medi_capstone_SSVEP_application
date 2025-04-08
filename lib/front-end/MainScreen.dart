@@ -4,9 +4,9 @@
 import 'package:flutter/material.dart';
 
 // Pages by Blink mode
-import 'package:medi_capstone1/front-end/displaySSVEP/block.dart';
-import 'package:medi_capstone1/front-end/displaySSVEP/entire.dart';
-// import 'package:medi_capstone1/front-end/displaySSVEP/vr.dart'; // 현재로서는 미사용
+import 'package:medi_capstone1/front-end/displayASSR/ASSRinterface.dart';
+// import 'package:medi_capstone1/front-end/displaySSVEP/entire.dart';
+import 'package:medi_capstone1/front-end/displaySSVEP/SSVEPinterface.dart';
 
 // Check the connected bluetooth device
 import 'package:medi_capstone1/HAL/front-end/checkConnection.dart';
@@ -37,20 +37,20 @@ class MainScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BlockScreen()),
+                  MaterialPageRoute(builder: (context) => SSVEPinterface()),
                 );
               },
-              child: Text('Block Mode'),
+              child: Text('SSVEP Mode'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Entire()),
+                  MaterialPageRoute(builder: (context) => ASSRinterface()),
                 );
               },
-              child: Text('Entire Mode'),
+              child: Text('ASSR Mode'),
             ),
           ],
         ),

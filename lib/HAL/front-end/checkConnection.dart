@@ -11,27 +11,43 @@ class CheckMsgScreen extends StatefulWidget {
 }
 
 class _CheckMsgScreenState extends State<CheckMsgScreen> {
-  String _message = "데이터를 기다리는 중..."; // 초기 메시지
+  String _message = "데이터를 기다리는 중..."; // 최초
   late DeviceConnector _deviceConnector;
 
   @override
   void initState() {
     super.initState();
-    _deviceConnector = DeviceConnector(); // 싱글톤 인스턴스 생성
-    _startReadingData(); // 데이터 읽기 시작
+    _deviceConnector = DeviceConnector(); // 싱글톤
+    _readDataPeriodically(); // 데이터 읽기
   }
 
   Future<void> _startReadingData() async {
+    print("초기 연결 상태: ${_deviceConnector.isAlreadyConnected}");
+
+    if (_deviceConnector.isAlreadyConnected) {
+      print("이미 연결된 상태입니다. 알림 수신 시작.");
+      _deviceConnector.startListeningToNotify((data) {
+        setState(() {
+          _message = data;
+        });
+      });
+      return;
+    }
+
+    print("Bluetooth 연결 시도 중...");
     int isConnected = await _deviceConnector.connectBluetooth();
 
     if (isConnected == 1) {
       print("SSVEP-Device 연결 성공");
-
-      // 데이터를 주기적으로 읽기
-      _readDataPeriodically();
+      _deviceConnector.startListeningToNotify((data) {
+        setState(() {
+          _message = data;
+        });
+      });
     } else {
+      print("Bluetooth 연결 실패 (코드: $isConnected)");
       setState(() {
-        _message = "Bluetooth 연결 실패";
+        _message = "Bluetooth 연결 실패 (코드: $isConnected)";
       });
     }
   }
@@ -39,7 +55,7 @@ class _CheckMsgScreenState extends State<CheckMsgScreen> {
   // 주기적으로 데이터를 읽어오는 함수
   void _readDataPeriodically() {
     // 데이터를 2초마다 읽기
-    Future.delayed(Duration(seconds: 2), () async {
+    Future.delayed(Duration(seconds: 1), () async {
       String data = await _readData();
       setState(() {
         _message = data; // 읽은 데이터를 화면에 업데이트
@@ -80,7 +96,7 @@ class _CheckMsgScreenState extends State<CheckMsgScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: _startReadingData, // 수동으로 다시 시작하는 버튼
+            onPressed: _readDataPeriodically, // 수동으로
           ),
         ],
       ),

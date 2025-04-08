@@ -2,35 +2,59 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 class Entire extends StatefulWidget {
+  final int frequency;
+  final int seconds;
+  final Color color;
+
+  Entire({
+    required this.frequency,
+    required this.seconds,
+    required this.color,
+  });
+
   @override
   _EntireState createState() => _EntireState();
 }
 
 class _EntireState extends State<Entire> {
-  int frequency = 10; // 깜빡이는 주파수 (Hz)
-  Color backgroundColor = Colors.white;
-  Timer? _timer;
+  late Color backgroundColor;
+  Timer? _blinkTimer;
+  Timer? _stopTimer;
 
   @override
   void initState() {
     super.initState();
+    backgroundColor = Colors.white;
     startBlinking();
+    stopAfterDuration();
   }
 
   void startBlinking() {
-    _timer?.cancel(); // 기존 타이머 정리
-    _timer =
-        Timer.periodic(Duration(milliseconds: (1000 ~/ frequency)), (timer) {
-      setState(() {
-        backgroundColor =
-            (backgroundColor == Colors.white) ? Colors.black : Colors.white;
-      });
+    _blinkTimer?.cancel();
+    _blinkTimer = Timer.periodic(
+      Duration(milliseconds: (1000 ~/ widget.frequency)),
+      (timer) {
+        setState(() {
+          backgroundColor =
+              (backgroundColor == Colors.white) ? widget.color : Colors.white;
+        });
+      },
+    );
+  }
+
+  void stopAfterDuration() {
+    _stopTimer = Timer(Duration(seconds: widget.seconds), () {
+      _blinkTimer?.cancel();
+      if (mounted) {
+        Navigator.pop(context); // 자동으로 뒤로 가기
+      }
     });
   }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _blinkTimer?.cancel();
+    _stopTimer?.cancel();
     super.dispose();
   }
 

@@ -2,11 +2,30 @@
 #include <BLEUtils.h>
 #include <BLEServer.h>
 
-// 보내게 될 테스트 HZ
-char test[20] = "{ \"V1\":50 }";
+// 보내게 될 메시지 블록
+struct msgblk
+{
+  short hz = 0;
+  short sec = 0;
+  char color[7] = "";
+}msg;
 
-#define SERVICE_UUID        "00001812-0000-1000-8000-00805F9B34FB"
-#define CHARACTERISTIC_UUID "00002B05-0000-1000-8000-00805F9B34FB"
+// 보내게 될 테스트 정보
+char* TEST_sendMSG(){
+  if( msg.hz > 60 )
+    {
+      msg.hz = 0;
+      msg.sec = 0;
+    }
+  else
+  {
+    msg.hz += 1;
+    msg.sec += 1;
+  }
+}
+
+#define SERVICE_UUID        "e2c56db5-dffb-48d2-b060-d0f5a71096e0"
+#define CHARACTERISTIC_UUID "a495ff10-c5b1-4b44-b512-1370f02d74de"
 
 BLECharacteristic *pCharacteristic;
 
@@ -39,9 +58,14 @@ void setup()
 
 void loop()
 {
-  Serial.println("Sending data...");
-  pCharacteristic->setValue(test);
+  static int count = 0;
+
+  Serial.print("Sending data... ");
+  Serial.println(++count);
+  
+  String msg = "MSG by BLE count, " + String(count);
+  pCharacteristic->setValue(msg.c_str());
   pCharacteristic->notify();
 
-  delay(2000); // 2초마다 전송
+  delay(1000); // 2초마다 전송
 }

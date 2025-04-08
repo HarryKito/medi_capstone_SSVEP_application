@@ -3,7 +3,7 @@
 // 시스템적 제어를 제외한 작성은 금지함.
 import 'package:flutter/material.dart';
 import 'package:medi_capstone1/front-end/bluetoothConnection.dart';
-import 'package:medi_capstone1/front-end/enter.dart';
+import 'package:medi_capstone1/front-end/MainScreen.dart';
 
 void main() {
   runApp(const SsvepMobile());

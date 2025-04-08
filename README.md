@@ -2,15 +2,13 @@
 
 A SSVEP application development project.
 
-## Structure of code
-
-main
-
-foreground
-
-interface
-
-ux
+## Screens
+| Screen Name | Note |
+| ------------ | ---------- |
+| BluetoothConnectionScreen | Bluetooth connection screen |
+| MainScreen | Connect to SSVEP or ASSR |
+| BlockScreen | Blink blocks |
+| Entire | Blink entire screen |
 
 ## Binding device rule
 
@@ -29,4 +27,4 @@ CHARACTERISTIC_UUID : 2B05
 > Connection test with  a bluetooth device. ( ESP32 C3 )
 
 <!-- 깃헙에서 업로드 하기 -->
-## Dev Week 2
+## 2025/04/02 결정 사항
