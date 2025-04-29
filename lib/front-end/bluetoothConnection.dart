@@ -51,6 +51,18 @@ class _BluetoothConnectionScreenState extends State<BluetoothConnectionScreen> {
     }
   }
 
+  Future<void> _sendData(String data) async {
+    try {
+      await DeviceConnector.sendData(data);
+      print('데이터 전송 성공: $data');
+    } catch (e) {
+      print('데이터 전송 실패: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('데이터 전송 실패')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

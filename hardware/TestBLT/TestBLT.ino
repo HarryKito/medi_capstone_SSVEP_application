@@ -3,6 +3,36 @@
 #include <BLEServer.h>
 #include <BLE2902.h>
 
+struct RGB {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+};
+
+typedef struct SSVEP_data {
+  uint8_t     func;
+  uint8_t     sec;
+  struct RGB  color;
+}SSVEP_data;
+
+SSVEP_data parse_data(const char* input) {
+    SSVEP_data result;
+    char color_str[7];  // RGB + null
+
+    sscanf(input, "F:%2hhuS:%2hhuC:%6s", &result.func, &result.sec, color_str);
+
+    // RGB
+    char r_str[3] = { color_str[0], color_str[1], '\0' };
+    char g_str[3] = { color_str[2], color_str[3], '\0' };
+    char b_str[3] = { color_str[4], color_str[5], '\0' };
+
+    result.color.r = (uint8_t)strtol(r_str, NULL, 16);
+    result.color.g = (uint8_t)strtol(g_str, NULL, 16);
+    result.color.b = (uint8_t)strtol(b_str, NULL, 16);
+
+    return result;
+}
+
 class _Callback : public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic *pCharacteristic) override {
     String rxValue = pCharacteristic->getValue();
@@ -87,7 +117,7 @@ void loop()
   Serial.print("Sending data... ");
   Serial.print(count%2 ? "Notify A " : "Notify B "); 
   Serial.println(++count);
-  
+
   pCharacteristic->setValue(count%2 ? msgA.c_str() : msgB.c_str());
   pCharacteristic->notify();
 

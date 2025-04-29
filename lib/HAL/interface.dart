@@ -22,6 +22,8 @@ import 'dart:async';
 class DeviceConnector {
   bool get isAlreadyConnected => _connectedDevice != null;
   static final DeviceConnector _instance = DeviceConnector._internal();
+
+  static BluetoothCharacteristic? writeCharacteristic;
   factory DeviceConnector() => _instance;
   DeviceConnector._internal();
 
@@ -83,7 +85,8 @@ class DeviceConnector {
                   if (characteristic.uuid.str.toLowerCase() ==
                       CHARACTERISTIC_UUID) {
                     _targetCharacteristic = characteristic;
-                    print("연결됨: ${characteristic.uuid.str}");
+                    writeCharacteristic = characteristic;
+                    print("찾은 특성 UUID: ${characteristic.uuid.str}");
                   }
                   // if (characteristic.properties.notify) // notify 활성화
                   // {
@@ -110,6 +113,16 @@ class DeviceConnector {
     });
 
     return connectionResult.future;
+  }
+
+  /// 설정화면 SSVEPDevice 데이터 전송
+  static Future<void> sendData(String data) async {
+    if (writeCharacteristic == null) {
+      throw Exception('Write characteristic not available');
+    }
+
+    List<int> bytes = data.codeUnits;
+    await writeCharacteristic!.write(bytes, withoutResponse: true);
   }
 
   /// 연결된 SSVEP-Device 내놔요

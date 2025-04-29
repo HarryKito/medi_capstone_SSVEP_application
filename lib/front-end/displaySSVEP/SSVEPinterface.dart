@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medi_capstone1/front-end/displaySSVEP/entire.dart';
+import 'package:medi_capstone1/HAL/interface.dart'; // DeviceConnector
 
 class SSVEPinterface extends StatefulWidget {
   @override
@@ -10,8 +11,8 @@ class _SSVEPinterface extends State<SSVEPinterface> {
   int selectedHz = 10;
   TextEditingController timeController = TextEditingController();
 
-  double red = 0;
-  double green = 0;
+  double red = 255;
+  double green = 255;
   double blue = 255;
 
   int get redInt => red.toInt();
@@ -22,7 +23,7 @@ class _SSVEPinterface extends State<SSVEPinterface> {
 
   final List<int> hzOptions = [for (int i = 10; i <= 60; i += 5) i];
 
-  void onStartPressed() {
+  void onStartPressed() async {
     int? seconds = int.tryParse(timeController.text);
 
     if (seconds == null || seconds <= 0) {
@@ -30,6 +31,23 @@ class _SSVEPinterface extends State<SSVEPinterface> {
         SnackBar(content: Text("유효한 시간을 입력하세요 (초 단위)")),
       );
       return;
+    }
+    // HEX Msg
+    String hexColor = selectedColor.red.toRadixString(16).padLeft(2, '0') +
+        selectedColor.green.toRadixString(16).padLeft(2, '0') +
+        selectedColor.blue.toRadixString(16).padLeft(2, '0');
+
+    String message =
+        "F:${selectedHz}S:${seconds.toString().padLeft(2, '0')}C:$hexColor";
+
+    try {
+      await DeviceConnector.sendData(message);
+      print("Send to device: $message");
+    } catch (e) {
+      print("BLE 전송 실패: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to send msg to the BLE")),
+      );
     }
 
     // 여기가 추가할 위치!
