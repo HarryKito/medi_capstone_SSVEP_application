@@ -1,6 +1,17 @@
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEServer.h>
+#include <BLE2902.h>
+
+class _Callback : public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic *pCharacteristic) override {
+    String rxValue = pCharacteristic->getValue();
+    if (rxValue.length() > 0) {
+      Serial.print("Received from mobile: ");
+      Serial.println(rxValue.c_str());
+    }
+  }
+};
 
 // 보내게 될 메시지 블록
 struct msgblk
@@ -38,34 +49,47 @@ void setup()
 // 
   pCharacteristic = pService->createCharacteristic(
     CHARACTERISTIC_UUID, 
-    BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY
+    BLECharacteristic::PROPERTY_READ |
+    BLECharacteristic::PROPERTY_WRITE |
+    BLECharacteristic::PROPERTY_WRITE_NR |
+    BLECharacteristic::PROPERTY_NOTIFY
   );
 // Write 필요없을거같은데 일단 넣고봄.
 // FIXME: 통신 구현 테스트 끝나면 지우기
+  pCharacteristic->addDescriptor(new BLE2902());
 
   pCharacteristic->setValue("Hello! From Medical Device!");
   pService->start();
 
+  pCharacteristic->setCallbacks(new _Callback());
+
+
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
+
   pAdvertising->setScanResponse(true);
   pAdvertising->setMinPreferred(0x06);
   pAdvertising->setMinPreferred(0x12);
+  
   BLEDevice::startAdvertising();
   Serial.println("Characteristic defined! Now you can read it in your mobile!");
-
 }
 
 void loop()
 {
   static int count = 0;
 
+  // 10HZ, 2Sec, 0xFFFFFF
+  String msgA = "F:10SS:02C:fa94ff";
+  // 20HZ, 5Sec, 0x7A544C
+  String msgB = "F:20SS:05C:94fffa";
+  
   Serial.print("Sending data... ");
+  Serial.print(count%2 ? "Notify A " : "Notify B "); 
   Serial.println(++count);
   
-  String msg = "MSG by BLE count, " + String(count);
-  pCharacteristic->setValue(msg.c_str());
+  pCharacteristic->setValue(count%2 ? msgA.c_str() : msgB.c_str());
   pCharacteristic->notify();
 
-  delay(1000); // 2초마다 전송
+  delay(10000); // 10초마다
 }

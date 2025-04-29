@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:medi_capstone1/front-end/bluetoothConnection.dart';
 import 'package:medi_capstone1/front-end/MainScreen.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() {
   runApp(const SsvepMobile());
 }
@@ -14,6 +16,11 @@ class SsvepMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: BluetoothConnectionScreen());
+    return MaterialApp(
+        navigatorKey: navigatorKey, // 🔑 여기에 키 설정
+        home: BluetoothConnectionScreen());
   }
 }
+
+// VR기깃 ㅓ 대체적으로 보여주기에
+//  BLE 디바이스 컨트롤보드 만들기

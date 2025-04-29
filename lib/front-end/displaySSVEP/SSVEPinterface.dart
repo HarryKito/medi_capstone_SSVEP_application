@@ -67,7 +67,7 @@ class _SSVEPinterface extends State<SSVEPinterface> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("제어 인터페이스")),
+      appBar: AppBar(title: Text("SSVEP Interface")),
       body: Center(
         child: Card(
           margin: EdgeInsets.all(20),
@@ -154,3 +154,4 @@ class _SSVEPinterface extends State<SSVEPinterface> {
     );
   }
 }
+// FIXME: 이 부분 블루투스로 보내는거로 만들기.

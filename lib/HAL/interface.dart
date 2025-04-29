@@ -1,7 +1,5 @@
 // interface.dart
 // 기기와의 통신을 담당하는 클래스 입니다.
-
-// TODO: 필요한 패키지 추가할 것
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'dart:async';
 
@@ -26,6 +24,9 @@ class DeviceConnector {
   static final DeviceConnector _instance = DeviceConnector._internal();
   factory DeviceConnector() => _instance;
   DeviceConnector._internal();
+
+  StreamController<String>? _notifyController;
+  Stream<String>? get notifyStream => _notifyController?.stream;
 
   // 2025/03/29 listen 중복문제 해결.
   StreamSubscription<List<ScanResult>>? _scanSubscription;
@@ -75,15 +76,14 @@ class DeviceConnector {
             List<BluetoothService> services =
                 await _connectedDevice!.discoverServices();
             for (var service in services) {
-              print("🔍 발견된 서비스: ${service.uuid.str}");
+              print("서비스: ${service.uuid.str}");
               if (service.uuid.str.toLowerCase() == SERVICE_UUID) {
                 for (var characteristic in service.characteristics) {
-                  print("  🔗 발견된 특성: ${characteristic.uuid.str}");
+                  print("특성값: ${characteristic.uuid.str}");
                   if (characteristic.uuid.str.toLowerCase() ==
                       CHARACTERISTIC_UUID) {
                     _targetCharacteristic = characteristic;
-                    print(
-                        "✅ 특성(characteristic) 연결 완료: ${characteristic.uuid.str}");
+                    print("연결됨: ${characteristic.uuid.str}");
                   }
                   // if (characteristic.properties.notify) // notify 활성화
                   // {
@@ -139,6 +139,19 @@ class DeviceConnector {
       String received = String.fromCharCodes(value);
       print("🔔 Notified: $received");
       onData(received); // 콜백으로 전달
+    });
+  }
+
+  void startListeningToNotifyStream() async {
+    if (_targetCharacteristic == null) return;
+
+    _notifyController ??= StreamController<String>.broadcast();
+
+    await _targetCharacteristic!.setNotifyValue(true);
+
+    _targetCharacteristic!.onValueReceived.listen((value) {
+      String received = String.fromCharCodes(value);
+      _notifyController?.add(received); // 스트림으로 데이터 추가
     });
   }
 

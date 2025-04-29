@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:medi_capstone1/parser.dart';
 import 'package:medi_capstone1/HAL/interface.dart'; // デバイス関連
 import 'package:medi_capstone1/front-end/MainScreen.dart';
+import 'package:medi_capstone1/front-end/displaySSVEP/entire.dart';
+import 'package:medi_capstone1/main.dart';
 
 class BluetoothConnectionScreen extends StatefulWidget {
   @override
@@ -20,6 +23,23 @@ class _BluetoothConnectionScreenState extends State<BluetoothConnectionScreen> {
   Future<void> _connectToDevice() async {
     int result = await DeviceConnector().connectBluetooth();
     if (result == 1) {
+      DeviceConnector().startListeningToNotifyStream();
+      DeviceConnector().notifyStream?.listen((data) {
+        print("글로벌 수신 데이터: $data");
+        ParsedData? parsed = parseNotifyData(data);
+        if (parsed != null) {
+          // 여기서 어떤 화면이든 강제로 띄우고 싶다면 navigatorKey 사용
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(
+              builder: (context) => Entire(
+                frequency: parsed.frequency,
+                seconds: parsed.seconds,
+                color: parsed.color,
+              ),
+            ),
+          );
+        }
+      });
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => MainScreen()),
