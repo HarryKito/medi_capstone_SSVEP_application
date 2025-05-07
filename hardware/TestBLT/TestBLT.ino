@@ -3,17 +3,11 @@
 #include <BLEServer.h>
 #include <BLE2902.h>
 
-struct RGB {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
+struct SSVEP_data {
+  uint8_t func;
+  uint8_t sec;
+  uint8_t r, g, b;
 };
-
-typedef struct SSVEP_data {
-  uint8_t     func;
-  uint8_t     sec;
-  struct RGB  color;
-}SSVEP_data;
 
 SSVEP_data parse_data(const char* input) {
     SSVEP_data result;
@@ -26,9 +20,9 @@ SSVEP_data parse_data(const char* input) {
     char g_str[3] = { color_str[2], color_str[3], '\0' };
     char b_str[3] = { color_str[4], color_str[5], '\0' };
 
-    result.color.r = (uint8_t)strtol(r_str, NULL, 16);
-    result.color.g = (uint8_t)strtol(g_str, NULL, 16);
-    result.color.b = (uint8_t)strtol(b_str, NULL, 16);
+    result.r = (uint8_t)strtol(r_str, NULL, 16);
+    result.g = (uint8_t)strtol(g_str, NULL, 16);
+    result.b = (uint8_t)strtol(b_str, NULL, 16);
 
     return result;
 }

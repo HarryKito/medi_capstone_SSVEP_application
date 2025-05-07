@@ -18,7 +18,7 @@ class SsvepMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         navigatorKey: navigatorKey, // 🔑 여기에 키 설정
-        home: BluetoothConnectionScreen());
+        home: MainScreen()); // BluetoothConnectionScreen
   }
 }
 

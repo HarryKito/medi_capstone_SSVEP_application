@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 // Pages by Blink mode
 import 'package:medi_capstone1/front-end/displayASSR/ASSRinterface.dart';
-// import 'package:medi_capstone1/front-end/displaySSVEP/entire.dart';
+import 'package:medi_capstone1/front-end/displaySSVEP/SSVEP_list.dart';
 import 'package:medi_capstone1/front-end/displaySSVEP/SSVEPinterface.dart';
 
 // Check the connected bluetooth device
@@ -16,7 +16,7 @@ class MainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SSVEP Mobile'),
+        title: Text('Evoke Potential Tester'),
         actions: [
           IconButton(
             icon: Icon(Icons.bug_report),
@@ -37,7 +37,7 @@ class MainScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SSVEPinterface()),
+                  MaterialPageRoute(builder: (context) => SSVEPListScreen()),
                 );
               },
               child: Text('SSVEP Mode'),
