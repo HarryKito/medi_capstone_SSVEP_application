@@ -31,8 +31,19 @@ class _SSVEPinterfaceState extends State<SSVEPinterface> {
   }
 
   Future<void> _runSSVEP(int hz, int sec, Color color) async {
-    // 예: 색을 깜박이거나 화면 전환
-    await Future.delayed(Duration(seconds: sec)); // 임시 대체
+    // Locking
+    await Future.delayed(Duration.zero);
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Entire(
+          frequency: hz,
+          seconds: sec,
+          color: color,
+        ),
+      ),
+    );
   }
 
   @override

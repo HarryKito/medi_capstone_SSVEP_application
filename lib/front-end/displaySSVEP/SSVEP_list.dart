@@ -304,17 +304,17 @@ class _AddItemDialogState extends State<AddItemDialog> {
                         children: [
                           _buildColorInput("R", (value) {
                             final val = int.tryParse(value) ?? 0;
-                            color = color.withRed(val);
+                            setState(() => color = color.withRed(val));
                           }, initial: color.red.toString()),
                           SizedBox(width: 8),
                           _buildColorInput("G", (value) {
                             final val = int.tryParse(value) ?? 0;
-                            color = color.withGreen(val);
+                            setState(() => color = color.withGreen(val));
                           }, initial: color.green.toString()),
                           SizedBox(width: 8),
                           _buildColorInput("B", (value) {
                             final val = int.tryParse(value) ?? 0;
-                            color = color.withBlue(val);
+                            setState(() => color = color.withGreen(val));
                           }, initial: color.blue.toString()),
                         ],
                       ),
@@ -335,7 +335,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
           ),
           SizedBox(height: 10),
           Text(
-            "※ 대기화면의 경우 시간만 기입하시오.",
+            "대기화면 시간",
             style: TextStyle(color: Colors.grey),
           ),
         ],
@@ -346,7 +346,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
           onPressed: () => Navigator.pop(context),
         ),
         TextButton(
-          child: Text("추가"),
+          child: Text(widget.item != null ? "수정" : "추가"),
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               _formKey.currentState!.save();
