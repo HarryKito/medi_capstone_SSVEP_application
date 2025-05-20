@@ -1,10 +1,8 @@
 // SSVEP 적용 리스트
-// TODO: 이 페이지가 SSVEPinterface보다 먼저 호출되어야 함!
-// 리스트 넣고
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:medi_capstone1/front-end/displaySSVEP/SSVEPinterface.dart';
+import 'package:medi_capstone1/HAL/interface.dart'; // DeviceConnector
 
 class SSVEPListScreen extends StatefulWidget {
   @override
@@ -14,8 +12,8 @@ class SSVEPListScreen extends StatefulWidget {
 class _SSVEPListScreenState extends State<SSVEPListScreen> {
   int currentIndex = 0;
   List<SSVEPItem> items = [
-    SSVEPItem(hz: 10, sec: 2, color: Colors.pink),
-    SSVEPItem(hz: 20, sec: 5, color: Colors.cyan),
+    SSVEPItem(hz: 2, sec: 2, color: Colors.pink),
+    SSVEPItem(hz: 60, sec: 1, color: Colors.cyan),
   ];
 
   void _addItem() async {
@@ -114,7 +112,6 @@ class _SSVEPListScreenState extends State<SSVEPListScreen> {
     if (currentIndex >= items.length) return;
     final currentItem = items[currentIndex];
 
-    // 여기서 SSVEP 실행
     print("_startSSVEP(currentItem);");
 
     Future.delayed(Duration(seconds: currentItem.sec), () {
@@ -132,6 +129,39 @@ class _SSVEPListScreenState extends State<SSVEPListScreen> {
         ),
       ),
     );
+  }
+
+  void Send_list() async {
+    final StringBuffer message = StringBuffer();
+
+    message.write("{\n\tCNT : ${items.length}");
+
+    for (int i = 0; i < items.length; i++) {
+      final item = items[i];
+      final hexColor = item.color.value
+          .toRadixString(16)
+          .padLeft(8, '0')
+          .substring(2)
+          .toUpperCase(); // ARGB → RGB
+      message.write(
+          "\n\tN: ${i + 1}\n\tF : ${item.hz}\n\tS : ${item.sec}\n\tC: $hexColor");
+    }
+
+    message.write("\n}");
+
+    final dataToSend = message.toString();
+    print("BLE 전송 메시지:\n$dataToSend");
+
+    try {
+      print("BLE 데이터 전송 성공");
+    } catch (e) {
+      print("BLE 데이터 전송 실패: $e");
+    }
+  }
+
+  void _execute() {
+    Send_list();
+    _navigateToInterfaceAll();
   }
 
   @override
@@ -185,7 +215,7 @@ class _SSVEPListScreenState extends State<SSVEPListScreen> {
         children: [
           FloatingActionButton.extended(
             heroTag: "runAll",
-            onPressed: _navigateToInterfaceAll,
+            onPressed: _execute,
             label: Text("전체 실행"),
             icon: Icon(Icons.play_arrow),
           ),
@@ -335,7 +365,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
           ),
           SizedBox(height: 10),
           Text(
-            "대기화면 시간",
+            "시간만 입력 시 대기화면으로 사용됩니다.",
             style: TextStyle(color: Colors.grey),
           ),
         ],

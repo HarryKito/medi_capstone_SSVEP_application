@@ -28,16 +28,17 @@ class _BluetoothConnectionScreenState extends State<BluetoothConnectionScreen> {
         print("글로벌 수신 데이터: $data");
         ParsedData? parsed = parseNotifyData(data);
         if (parsed != null) {
-          // 여기서 어떤 화면이든 강제로 띄우고 싶다면 navigatorKey 사용
-          navigatorKey.currentState?.push(
-            MaterialPageRoute(
-              builder: (context) => Entire(
-                frequency: parsed.frequency,
-                seconds: parsed.seconds,
-                color: parsed.color,
-              ),
-            ),
-          );
+          debugPrint("BLE에 의하여 화면... 호출됨");
+          // FIXME: Entire 화면으로 이동하는 부분 고치세요.
+          // navigatorKey.currentState?.push(
+          //   MaterialPageRoute(
+          //     builder: (context) => Entire(
+          //       frequency: parsed.frequency,
+          //       seconds: parsed.seconds,
+          //       color: parsed.color,
+          //     ),
+          //   ),
+          // );
         }
       });
       Navigator.pushReplacement(

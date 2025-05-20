@@ -32,9 +32,8 @@ class DeviceConnector {
 
   // 2025/03/29 listen 중복문제 해결.
   StreamSubscription<List<ScanResult>>? _scanSubscription;
-  // 연결기기 정보
+  // 연결기기 정보 & 특성 정보
   BluetoothDevice? _connectedDevice;
-  // 연결기기 특성
   BluetoothCharacteristic? _targetCharacteristic;
 
   // 연결기기 특성 정보값 (일치여부 확인 시 필요)
