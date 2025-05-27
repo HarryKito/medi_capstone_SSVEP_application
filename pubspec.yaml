@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.6
   flutter_blue_plus: ^1.35.3
   flutter_colorpicker: ^1.1.0
+  flutter_sound: ^9.1.8
+  flutter_sound_platform_interface: ^9.2.13
 
 dev_dependencies:
   flutter_test:
