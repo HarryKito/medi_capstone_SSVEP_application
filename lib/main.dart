@@ -8,6 +8,7 @@ import 'package:medi_capstone1/front-end/MainScreen.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const SsvepMobile());
 }
 

@@ -37,7 +37,7 @@ class _ASSRinterfaceState extends State<ASSRinterface> {
   bool selectAll = false;
 
   final FlutterSoundPlayer _player = FlutterSoundPlayer();
-  bool _playerInited = true;
+  bool _playerInited = false;
 
   @override
   void initState() {
@@ -99,6 +99,7 @@ class _ASSRinterfaceState extends State<ASSRinterface> {
   }
 
   Future<void> playSequence() async {
+    if (!_playerInited) debugPrint("플레이어가 아직 초기화 안됐음.");
     setState(() => isPlaying = true);
 
     for (var config in configs) {
