@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:medi_capstone1/front-end/displaySSVEP/SSVEPinterface.dart';
 import 'package:medi_capstone1/HAL/interface.dart'; // DeviceConnector
 
-class SSVEPListScreen extends StatefulWidget {
+class SSVEPinterface extends StatefulWidget {
   @override
-  _SSVEPListScreenState createState() => _SSVEPListScreenState();
+  _SSVEPinterface createState() => _SSVEPinterface();
 }
 
-class _SSVEPListScreenState extends State<SSVEPListScreen> {
+class _SSVEPinterface extends State<SSVEPinterface> {
   int currentIndex = 0;
   List<SSVEPItem> items = [
     SSVEPItem(hz: 2, sec: 2, color: Colors.pink),
@@ -124,7 +124,7 @@ class _SSVEPListScreenState extends State<SSVEPListScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => SSVEPinterface(
+        builder: (context) => SSVEPui(
           items: items, // 현재 SSVEPListScreen 내의 전체 리스트
         ),
       ),

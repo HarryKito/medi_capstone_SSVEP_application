@@ -3,16 +3,16 @@ import 'package:medi_capstone1/front-end/displaySSVEP/entire.dart';
 import 'package:medi_capstone1/front-end/displaySSVEP/SSVEP_list.dart';
 import 'package:medi_capstone1/HAL/interface.dart'; // DeviceConnector
 
-class SSVEPinterface extends StatefulWidget {
+class SSVEPui extends StatefulWidget {
   final List<SSVEPItem> items;
 
-  SSVEPinterface({required this.items});
+  SSVEPui({required this.items});
 
   @override
-  _SSVEPinterfaceState createState() => _SSVEPinterfaceState();
+  _SSVEPui createState() => _SSVEPui();
 }
 
-class _SSVEPinterfaceState extends State<SSVEPinterface> {
+class _SSVEPui extends State<SSVEPui> {
   int currentIndex = 0;
 
   @override

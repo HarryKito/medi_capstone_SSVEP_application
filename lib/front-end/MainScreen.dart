@@ -37,7 +37,7 @@ class MainScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SSVEPListScreen()),
+                  MaterialPageRoute(builder: (context) => SSVEPinterface()),
                 );
               },
               child: Text('SSVEP Mode'),
